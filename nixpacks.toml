@@ -1,0 +1,18 @@
+# Nixpacks configuration for Railway deployment
+# https://nixpacks.com/docs/configuration/file
+
+[phases.setup]
+nixPkgs = ["nodejs_22", "pnpm", "git"]
+
+[phases.install]
+cmds = ["pnpm install --frozen-lockfile"]
+
+[phases.build]
+cmds = ["pnpm build"]
+
+[start]
+cmd = "node dist/entry.js gateway run --port ${PORT:-3000} --bind 0.0.0.0"
+
+[variables]
+NODE_ENV = "production"
+JAR4_GATEWAY_MODE = "local"

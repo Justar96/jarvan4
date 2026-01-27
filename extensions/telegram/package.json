@@ -1,0 +1,11 @@
+{
+  "name": "@jar4/telegram",
+  "version": "2026.1.26",
+  "type": "module",
+  "description": "Jar4 Telegram channel plugin",
+  "jar4": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

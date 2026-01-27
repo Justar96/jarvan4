@@ -1,0 +1,31 @@
+{
+  "name": "@jar4/nostr",
+  "version": "2026.1.26",
+  "type": "module",
+  "description": "Jar4 Nostr channel plugin for NIP-04 encrypted DMs",
+  "jar4": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "channel": {
+      "id": "nostr",
+      "label": "Nostr",
+      "selectionLabel": "Nostr (NIP-04 DMs)",
+      "docsPath": "/channels/nostr",
+      "docsLabel": "nostr",
+      "blurb": "Decentralized protocol; encrypted DMs via NIP-04.",
+      "order": 55,
+      "quickstartAllowFrom": true
+    },
+    "install": {
+      "npmSpec": "@jar4/nostr",
+      "localPath": "extensions/nostr",
+      "defaultChoice": "npm"
+    }
+  },
+  "dependencies": {
+    "jar4": "workspace:*",
+    "nostr-tools": "^2.20.0",
+    "zod": "^4.3.6"
+  }
+}

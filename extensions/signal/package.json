@@ -1,0 +1,11 @@
+{
+  "name": "@jar4/signal",
+  "version": "2026.1.26",
+  "type": "module",
+  "description": "Jar4 Signal channel plugin",
+  "jar4": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

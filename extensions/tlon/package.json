@@ -1,0 +1,30 @@
+{
+  "name": "@jar4/tlon",
+  "version": "2026.1.26",
+  "type": "module",
+  "description": "Jar4 Tlon/Urbit channel plugin",
+  "jar4": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "channel": {
+      "id": "tlon",
+      "label": "Tlon",
+      "selectionLabel": "Tlon (Urbit)",
+      "docsPath": "/channels/tlon",
+      "docsLabel": "tlon",
+      "blurb": "decentralized messaging on Urbit; install the plugin to enable.",
+      "order": 90,
+      "quickstartAllowFrom": true
+    },
+    "install": {
+      "npmSpec": "@jar4/tlon",
+      "localPath": "extensions/tlon",
+      "defaultChoice": "npm"
+    }
+  },
+  "dependencies": {
+    "@urbit/aura": "^3.0.0",
+    "@urbit/http-api": "^3.0.0"
+  }
+}

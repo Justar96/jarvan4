@@ -1,0 +1,11 @@
+{
+  "name": "@jar4/google-gemini-cli-auth",
+  "version": "2026.1.26",
+  "type": "module",
+  "description": "Jar4 Gemini CLI OAuth provider plugin",
+  "jar4": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}
