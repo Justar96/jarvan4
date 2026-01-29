@@ -10,13 +10,18 @@ if [[ -z "${CLAWDBOT_INSTALL_PACKAGE:-}" && "$INSTALL_URL" == *"clawd.bot"* ]]; 
 fi
 PACKAGE_NAME="${CLAWDBOT_INSTALL_PACKAGE:-$DEFAULT_PACKAGE}"
 if [[ "$PACKAGE_NAME" == "jar4" ]]; then
-  ALT_PACKAGE_NAME="jar4"
+  ALT_PACKAGE_NAME="clawdbot"
 else
   ALT_PACKAGE_NAME="jar4"
 fi
 
 echo "==> Resolve npm versions"
-LATEST_VERSION="$(npm view "$PACKAGE_NAME" version)"
+LATEST_VERSION="$(npm view "$PACKAGE_NAME" version 2>/dev/null || true)"
+if [[ -z "$LATEST_VERSION" ]]; then
+  echo "WARN: $PACKAGE_NAME not found on npm, trying $ALT_PACKAGE_NAME"
+  PACKAGE_NAME="$ALT_PACKAGE_NAME"
+  LATEST_VERSION="$(npm view "$PACKAGE_NAME" version)"
+fi
 if [[ -n "$SMOKE_PREVIOUS_VERSION" ]]; then
   PREVIOUS_VERSION="$SMOKE_PREVIOUS_VERSION"
 else

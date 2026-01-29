@@ -11,7 +11,7 @@
         "./cli-entry": "./dist/entry.js"
     },
     "bin": {
-        "jar4": "dist/entry.js"
+        "jar4": "bin/jar4.js"
     },
     "files": [
         "dist/acp/**",
