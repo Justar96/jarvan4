@@ -37,7 +37,7 @@ describe("state + config path candidates", () => {
   it("prefers JAR4_STATE_DIR over legacy state dir env", () => {
     const env = {
       JAR4_STATE_DIR: "/new/state",
-      JAR4_STATE_DIR: "/legacy/state",
+      CLAWDBOT_STATE_DIR: "/legacy/state",
     } as NodeJS.ProcessEnv;
 
     expect(resolveStateDir(env, () => "/home/test")).toBe(path.resolve("/new/state"));

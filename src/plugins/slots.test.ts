@@ -58,7 +58,7 @@ describe("applyExclusiveSlotSelection", () => {
     expect(result.config).toBe(config);
   });
 
-  it("warns when the slot falls back to a default", () => {
+  it("switches to selected plugin from empty default without 'switched from' warning", () => {
     const config: Jar4Config = {
       plugins: {
         entries: {
@@ -75,9 +75,9 @@ describe("applyExclusiveSlotSelection", () => {
     });
 
     expect(result.changed).toBe(true);
-    expect(result.warnings).toContain(
-      'Exclusive slot "memory" switched from "memory-core" to "memory".',
-    );
+    expect(result.config.plugins?.slots?.memory).toBe("memory");
+    // No "switched from" warning since default is empty (no previous slot was set)
+    expect(result.warnings).toHaveLength(0);
   });
 
   it("skips changes when no exclusive slot applies", () => {

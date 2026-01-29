@@ -36,7 +36,7 @@ export function resolveStateDir(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = os.homedir,
 ): string {
-  const override = env.JAR4_STATE_DIR?.trim() || env.JAR4_STATE_DIR?.trim();
+  const override = env.JAR4_STATE_DIR?.trim() || env.CLAWDBOT_STATE_DIR?.trim();
   if (override) return resolveUserPath(override);
   return legacyStateDir(homedir);
 }
@@ -62,7 +62,7 @@ export function resolveConfigPath(
   env: NodeJS.ProcessEnv = process.env,
   stateDir: string = resolveStateDir(env, os.homedir),
 ): string {
-  const override = env.JAR4_CONFIG_PATH?.trim() || env.JAR4_CONFIG_PATH?.trim();
+  const override = env.JAR4_CONFIG_PATH?.trim() || env.CLAWDBOT_CONFIG_PATH?.trim();
   if (override) return resolveUserPath(override);
   return path.join(stateDir, CONFIG_FILENAME);
 }
@@ -77,7 +77,7 @@ export function resolveDefaultConfigCandidates(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = os.homedir,
 ): string[] {
-  const explicit = env.JAR4_CONFIG_PATH?.trim() || env.JAR4_CONFIG_PATH?.trim();
+  const explicit = env.JAR4_CONFIG_PATH?.trim() || env.CLAWDBOT_CONFIG_PATH?.trim();
   if (explicit) return [resolveUserPath(explicit)];
 
   const candidates: string[] = [];
@@ -85,7 +85,7 @@ export function resolveDefaultConfigCandidates(
   if (jar4StateDir) {
     candidates.push(path.join(resolveUserPath(jar4StateDir), CONFIG_FILENAME));
   }
-  const legacyStateDirOverride = env.JAR4_STATE_DIR?.trim();
+  const legacyStateDirOverride = env.CLAWDBOT_STATE_DIR?.trim();
   if (legacyStateDirOverride) {
     candidates.push(path.join(resolveUserPath(legacyStateDirOverride), CONFIG_FILENAME));
   }
@@ -134,10 +134,7 @@ export function resolveOAuthPath(
   return path.join(resolveOAuthDir(env, stateDir), OAUTH_FILENAME);
 }
 
-export function resolveGatewayPort(
-  cfg?: Jar4Config,
-  env: NodeJS.ProcessEnv = process.env,
-): number {
+export function resolveGatewayPort(cfg?: Jar4Config, env: NodeJS.ProcessEnv = process.env): number {
   const envRaw = env.JAR4_GATEWAY_PORT?.trim();
   if (envRaw) {
     const parsed = Number.parseInt(envRaw, 10);

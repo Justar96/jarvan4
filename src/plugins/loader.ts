@@ -210,7 +210,6 @@ export function loadJar4Plugins(options: PluginLoadOptions = {}): PluginRegistry
       ? {
           alias: {
             "jar4/plugin-sdk": pluginSdkAlias,
-            "jar4/plugin-sdk": pluginSdkAlias,
           },
         }
       : {}),

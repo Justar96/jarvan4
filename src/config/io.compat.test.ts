@@ -14,7 +14,7 @@ async function withTempHome(run: (home: string) => Promise<void>): Promise<void>
   }
 }
 
-async function writeConfig(home: string, dirname: ".jar4" | ".jar4", port: number) {
+async function writeConfig(home: string, dirname: ".jar4", port: number) {
   const dir = path.join(home, dirname);
   await fs.mkdir(dir, { recursive: true });
   const configPath = path.join(dir, "jar4.json");
@@ -22,47 +22,35 @@ async function writeConfig(home: string, dirname: ".jar4" | ".jar4", port: numbe
   return configPath;
 }
 
-describe("config io compat (new + legacy folders)", () => {
-  it("prefers ~/.jar4/jar4.json when both configs exist", async () => {
+describe("config io compat", () => {
+  it("loads config from ~/.jar4/jar4.json", async () => {
     await withTempHome(async (home) => {
-      const newConfigPath = await writeConfig(home, ".jar4", 19001);
-      await writeConfig(home, ".jar4", 18789);
+      const configPath = await writeConfig(home, ".jar4", 19001);
 
       const io = createConfigIO({
         env: {} as NodeJS.ProcessEnv,
         homedir: () => home,
       });
-      expect(io.configPath).toBe(newConfigPath);
+      expect(io.configPath).toBe(configPath);
       expect(io.loadConfig().gateway?.port).toBe(19001);
     });
   });
 
-  it("falls back to ~/.jar4/jar4.json when only legacy exists", async () => {
+  it("honors explicit config path env override", async () => {
     await withTempHome(async (home) => {
-      const legacyConfigPath = await writeConfig(home, ".jar4", 20001);
+      const defaultConfigPath = await writeConfig(home, ".jar4", 19002);
+      const customConfigDir = path.join(home, "custom");
+      await fs.mkdir(customConfigDir, { recursive: true });
+      const customConfigPath = path.join(customConfigDir, "jar4.json");
+      await fs.writeFile(customConfigPath, JSON.stringify({ gateway: { port: 20002 } }, null, 2));
 
       const io = createConfigIO({
-        env: {} as NodeJS.ProcessEnv,
+        env: { JAR4_CONFIG_PATH: customConfigPath } as NodeJS.ProcessEnv,
         homedir: () => home,
       });
 
-      expect(io.configPath).toBe(legacyConfigPath);
-      expect(io.loadConfig().gateway?.port).toBe(20001);
-    });
-  });
-
-  it("honors explicit legacy config path env override", async () => {
-    await withTempHome(async (home) => {
-      const newConfigPath = await writeConfig(home, ".jar4", 19002);
-      const legacyConfigPath = await writeConfig(home, ".jar4", 20002);
-
-      const io = createConfigIO({
-        env: { JAR4_CONFIG_PATH: legacyConfigPath } as NodeJS.ProcessEnv,
-        homedir: () => home,
-      });
-
-      expect(io.configPath).not.toBe(newConfigPath);
-      expect(io.configPath).toBe(legacyConfigPath);
+      expect(io.configPath).not.toBe(defaultConfigPath);
+      expect(io.configPath).toBe(customConfigPath);
       expect(io.loadConfig().gateway?.port).toBe(20002);
     });
   });

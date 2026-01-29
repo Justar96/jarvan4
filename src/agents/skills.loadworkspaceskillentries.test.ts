@@ -47,6 +47,12 @@ describe("loadWorkspaceSkillEntries", () => {
     const pluginRoot = path.join(workspaceDir, ".jar4", "extensions", "open-prose");
 
     await fs.mkdir(path.join(pluginRoot, "skills", "prose"), { recursive: true });
+    // Plugin discovery needs an index file to detect the plugin
+    await fs.writeFile(
+      path.join(pluginRoot, "index.ts"),
+      'export default { id: "open-prose", register() {} };',
+      "utf-8",
+    );
     await fs.writeFile(
       path.join(pluginRoot, "jar4.plugin.json"),
       JSON.stringify(
@@ -86,6 +92,12 @@ describe("loadWorkspaceSkillEntries", () => {
     const pluginRoot = path.join(workspaceDir, ".jar4", "extensions", "open-prose");
 
     await fs.mkdir(path.join(pluginRoot, "skills", "prose"), { recursive: true });
+    // Plugin discovery needs an index file to detect the plugin
+    await fs.writeFile(
+      path.join(pluginRoot, "index.ts"),
+      'export default { id: "open-prose", register() {} };',
+      "utf-8",
+    );
     await fs.writeFile(
       path.join(pluginRoot, "jar4.plugin.json"),
       JSON.stringify(

@@ -36,40 +36,29 @@ describe("Nix integration (U3, U5, U9)", () => {
 
   describe("U5: CONFIG_PATH and STATE_DIR env var overrides", () => {
     it("STATE_DIR defaults to ~/.jar4 when env not set", async () => {
-      await withEnvOverride(
-        { JAR4_STATE_DIR: undefined, JAR4_STATE_DIR: undefined },
-        async () => {
-          const { STATE_DIR } = await import("./config.js");
-          expect(STATE_DIR).toMatch(/\.jar4$/);
-        },
-      );
+      await withEnvOverride({ JAR4_STATE_DIR: undefined }, async () => {
+        const { STATE_DIR } = await import("./config.js");
+        expect(STATE_DIR).toMatch(/\.jar4$/);
+      });
     });
 
     it("STATE_DIR respects JAR4_STATE_DIR override", async () => {
-      await withEnvOverride(
-        { JAR4_STATE_DIR: undefined, JAR4_STATE_DIR: "/custom/state/dir" },
-        async () => {
-          const { STATE_DIR } = await import("./config.js");
-          expect(STATE_DIR).toBe(path.resolve("/custom/state/dir"));
-        },
-      );
+      await withEnvOverride({ JAR4_STATE_DIR: "/custom/state/dir" }, async () => {
+        const { STATE_DIR } = await import("./config.js");
+        expect(STATE_DIR).toBe(path.resolve("/custom/state/dir"));
+      });
     });
 
     it("STATE_DIR prefers JAR4_STATE_DIR over legacy override", async () => {
-      await withEnvOverride(
-        { JAR4_STATE_DIR: "/custom/new", JAR4_STATE_DIR: "/custom/legacy" },
-        async () => {
-          const { STATE_DIR } = await import("./config.js");
-          expect(STATE_DIR).toBe(path.resolve("/custom/new"));
-        },
-      );
+      await withEnvOverride({ JAR4_STATE_DIR: "/custom/new" }, async () => {
+        const { STATE_DIR } = await import("./config.js");
+        expect(STATE_DIR).toBe(path.resolve("/custom/new"));
+      });
     });
 
     it("CONFIG_PATH defaults to ~/.jar4/jar4.json when env not set", async () => {
       await withEnvOverride(
         {
-          JAR4_CONFIG_PATH: undefined,
-          JAR4_STATE_DIR: undefined,
           JAR4_CONFIG_PATH: undefined,
           JAR4_STATE_DIR: undefined,
         },
@@ -81,20 +70,16 @@ describe("Nix integration (U3, U5, U9)", () => {
     });
 
     it("CONFIG_PATH respects JAR4_CONFIG_PATH override", async () => {
-      await withEnvOverride(
-        { JAR4_CONFIG_PATH: undefined, JAR4_CONFIG_PATH: "/nix/store/abc/jar4.json" },
-        async () => {
-          const { CONFIG_PATH } = await import("./config.js");
-          expect(CONFIG_PATH).toBe(path.resolve("/nix/store/abc/jar4.json"));
-        },
-      );
+      await withEnvOverride({ JAR4_CONFIG_PATH: "/nix/store/abc/jar4.json" }, async () => {
+        const { CONFIG_PATH } = await import("./config.js");
+        expect(CONFIG_PATH).toBe(path.resolve("/nix/store/abc/jar4.json"));
+      });
     });
 
     it("CONFIG_PATH prefers JAR4_CONFIG_PATH over legacy override", async () => {
       await withEnvOverride(
         {
           JAR4_CONFIG_PATH: "/nix/store/new/jar4.json",
-          JAR4_CONFIG_PATH: "/nix/store/legacy/jar4.json",
         },
         async () => {
           const { CONFIG_PATH } = await import("./config.js");
@@ -105,21 +90,16 @@ describe("Nix integration (U3, U5, U9)", () => {
 
     it("CONFIG_PATH expands ~ in JAR4_CONFIG_PATH override", async () => {
       await withTempHome(async (home) => {
-        await withEnvOverride(
-          { JAR4_CONFIG_PATH: undefined, JAR4_CONFIG_PATH: "~/.jar4/custom.json" },
-          async () => {
-            const { CONFIG_PATH } = await import("./config.js");
-            expect(CONFIG_PATH).toBe(path.join(home, ".jar4", "custom.json"));
-          },
-        );
+        await withEnvOverride({ JAR4_CONFIG_PATH: "~/.jar4/custom.json" }, async () => {
+          const { CONFIG_PATH } = await import("./config.js");
+          expect(CONFIG_PATH).toBe(path.join(home, ".jar4", "custom.json"));
+        });
       });
     });
 
     it("CONFIG_PATH uses STATE_DIR when only state dir is overridden", async () => {
       await withEnvOverride(
         {
-          JAR4_CONFIG_PATH: undefined,
-          JAR4_STATE_DIR: undefined,
           JAR4_CONFIG_PATH: undefined,
           JAR4_STATE_DIR: "/custom/state",
         },
@@ -198,9 +178,7 @@ describe("Nix integration (U3, U5, U9)", () => {
         expect(cfg.plugins?.load?.paths?.[0]).toBe(path.join(home, "plugins", "demo-plugin"));
         expect(cfg.agents?.defaults?.workspace).toBe(path.join(home, "ws-default"));
         expect(cfg.agents?.list?.[0]?.workspace).toBe(path.join(home, "ws-agent"));
-        expect(cfg.agents?.list?.[0]?.agentDir).toBe(
-          path.join(home, ".jar4", "agents", "main"),
-        );
+        expect(cfg.agents?.list?.[0]?.agentDir).toBe(path.join(home, ".jar4", "agents", "main"));
         expect(cfg.agents?.list?.[0]?.sandbox?.workspaceRoot).toBe(path.join(home, "sandbox-root"));
         expect(cfg.channels?.whatsapp?.accounts?.personal?.authDir).toBe(
           path.join(home, ".jar4", "credentials", "wa-personal"),

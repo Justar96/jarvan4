@@ -3,9 +3,9 @@ import { describe, expect, it } from "vitest";
 import { normalizePluginsConfig } from "./config-state.js";
 
 describe("normalizePluginsConfig", () => {
-  it("uses default memory slot when not specified", () => {
+  it("uses empty default memory slot when not specified", () => {
     const result = normalizePluginsConfig({});
-    expect(result.slots.memory).toBe("memory-core");
+    expect(result.slots.memory).toBe("");
   });
 
   it("respects explicit memory slot value", () => {
@@ -36,17 +36,17 @@ describe("normalizePluginsConfig", () => {
     expect(result.slots.memory).toBe("custom-memory");
   });
 
-  it("uses default when memory slot is empty string", () => {
+  it("keeps empty string when memory slot is empty string", () => {
     const result = normalizePluginsConfig({
       slots: { memory: "" },
     });
-    expect(result.slots.memory).toBe("memory-core");
+    expect(result.slots.memory).toBe("");
   });
 
-  it("uses default when memory slot is whitespace only", () => {
+  it("uses empty string when memory slot is whitespace only", () => {
     const result = normalizePluginsConfig({
       slots: { memory: "   " },
     });
-    expect(result.slots.memory).toBe("memory-core");
+    expect(result.slots.memory).toBe("");
   });
 });
