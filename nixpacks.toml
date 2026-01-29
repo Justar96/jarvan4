@@ -8,11 +8,10 @@ nixPkgs = ["nodejs_22", "pnpm", "git"]
 cmds = ["pnpm install --frozen-lockfile"]
 
 [phases.build]
-cmds = ["pnpm build"]
+cmds = ["pnpm build", "pnpm ui:install", "pnpm ui:build"]
 
 [start]
 cmd = "node dist/entry.js gateway run --port ${PORT:-3000} --bind 0.0.0.0"
 
 [variables]
 NODE_ENV = "production"
-JAR4_GATEWAY_MODE = "local"
