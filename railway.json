@@ -5,7 +5,7 @@
     "buildCommand": "pnpm install && pnpm build && pnpm ui:install && pnpm ui:build"
   },
   "deploy": {
-    "startCommand": "node dist/entry.js gateway run --port $PORT --bind 0.0.0.0",
+    "startCommand": "node dist/entry.js gateway run --port $PORT --bind 0.0.0.0 --allow-unconfigured",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE",
