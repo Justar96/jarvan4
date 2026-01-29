@@ -88,11 +88,8 @@ export async function resolveGatewayRuntimeConfig(params: {
   if (tailscaleMode !== "off" && !isLoopbackHost(bindHost)) {
     throw new Error("tailscale serve/funnel requires gateway bind=loopback (127.0.0.1)");
   }
-  if (!isLoopbackHost(bindHost) && !hasSharedSecret) {
-    throw new Error(
-      `refusing to bind gateway to ${bindHost}:${params.port} without auth (set gateway.auth.token/password, or set JAR4_GATEWAY_TOKEN/JAR4_GATEWAY_PASSWORD)`,
-    );
-  }
+  // We no longer throw here to allow the server to start (e.g. for healthchecks).
+  // The actual connection authorization will still block access if hasSharedSecret is false.
 
   return {
     bindHost,

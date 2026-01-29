@@ -130,7 +130,10 @@ export function registerOnboardCommand(program: Command) {
               typeof gatewayPort === "number" && Number.isFinite(gatewayPort)
                 ? gatewayPort
                 : undefined,
-            gatewayBind: opts.gatewayBind as GatewayBind | undefined,
+            gatewayBind:
+              opts.gatewayBind === "0.0.0.0"
+                ? "lan"
+                : (opts.gatewayBind as GatewayBind | undefined),
             gatewayAuth: opts.gatewayAuth as GatewayAuthChoice | undefined,
             gatewayToken: opts.gatewayToken as string | undefined,
             gatewayPassword: opts.gatewayPassword as string | undefined,

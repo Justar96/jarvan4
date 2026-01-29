@@ -44,4 +44,4 @@ USER node
 
 # Default command - starts the Jar4 gateway
 # Railway will inject PORT, bind to 0.0.0.0 for external access
-CMD ["sh", "-c", "node dist/entry.js gateway run --port ${PORT:-3000} --bind 0.0.0.0"]
+CMD ["sh", "-c", "node dist/entry.js gateway run --port ${PORT:-3000} --bind 0.0.0.0 --allow-unconfigured"]

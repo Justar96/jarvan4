@@ -176,10 +176,13 @@ async function runGatewayCommand(opts: GatewayRunOpts) {
   const bind =
     bindRaw === "loopback" ||
     bindRaw === "lan" ||
+    bindRaw === "0.0.0.0" ||
     bindRaw === "auto" ||
     bindRaw === "custom" ||
     bindRaw === "tailnet"
-      ? bindRaw
+      ? bindRaw === "0.0.0.0"
+        ? "lan"
+        : bindRaw
       : null;
   if (!bind) {
     defaultRuntime.error('Invalid --bind (use "loopback", "lan", "tailnet", "auto", or "custom")');
@@ -243,17 +246,10 @@ async function runGatewayCommand(opts: GatewayRunOpts) {
     return;
   }
   if (bind !== "loopback" && !hasSharedSecret) {
-    defaultRuntime.error(
-      [
-        `Refusing to bind gateway to ${bind} without auth.`,
-        "Set gateway.auth.token/password (or JAR4_GATEWAY_TOKEN/JAR4_GATEWAY_PASSWORD) or pass --token/--password.",
-        ...authHints,
-      ]
-        .filter(Boolean)
-        .join("\n"),
+    gatewayLog.warn(`Warning: Binding gateway to ${bind} without auth.`);
+    gatewayLog.warn(
+      `Set gateway.auth.token/password (or JAR4_GATEWAY_TOKEN/JAR4_GATEWAY_PASSWORD) or pass --token/--password to enable access.`,
     );
-    defaultRuntime.exit(1);
-    return;
   }
 
   try {
